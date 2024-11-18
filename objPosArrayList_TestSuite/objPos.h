@@ -14,7 +14,7 @@ class objPos
         Pos* pos;        
         char symbol;
 
-        objPos();
+        objPos(); //default constructor
         objPos(int xPos, int yPos, char sym);
         
         // Respect the rule of six / minimum four

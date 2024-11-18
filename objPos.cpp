@@ -1,4 +1,5 @@
 #include "objPos.h"
+#include "MacUILib.h" //i added that
 
 objPos::objPos()
 {
@@ -19,9 +20,85 @@ objPos::objPos(int xPos, int yPos, char sym)
 // Respect the rule of six / minimum four
 // [TODO] Implement the missing special member functions to meet the minimum four rule
 
+//destructing the constructor
+objPos::~objPos()
+{
+    // cout <<"Destructor Called\n";
+    delete pos;
+}
+
+//copy constructor
+objPos::objPos(const objPos &a)
+{
+    // cout<<"Cpy constructor called\n";
+    //deep copy
+
+        // Pos* pos;        
+        // char symbol;
+
+    symbol = a.symbol; //deep copy
+    pos = new Pos;
+
+    for(int i = 0; i < symbol; i++)
+    {
+        pos[i] = a.pos[i];
+    }
+}
+
+objPos& objPos::operator=(const objPos &a)
+{
+    //cout<<"Copy assignment operator called\n";
+    if(this != &a)
+    {
+        this->symbol = a.symbol;
+        for(int i = 0; i < this->symbol; i++)
+        {
+        this->pos[i] = a.pos[i];
+        }
+        return *this;
+    }
+}
 
 
 
+
+void gameboard()
+{
+    const int rows = 10;
+    const int columns = 20;
+    char gameboard[rows][columns];
+
+    for(int i = 0; i < rows; i++){
+        //inner loop for width
+        for(int j = 0; j < columns; j++){
+            // if(int i == objpost1.x && j == objpost1.y)
+            // {
+            //     gameboard[i][j] = objpost1.symbol;
+            // }
+            if (i == 0 || i == rows-1 || j == 0 || j == columns-1)
+            {
+                gameboard[i][j] = '#';
+            }
+            else if( i == 2 && j ==6) //aribtary coordinate
+            {
+                gameboard[i][j] = 'W';
+            }
+            else if(i == 10 && j == 13)
+            {
+                gameboard[i][j] = 'Z'; //aribtary coordinate
+            }
+            else
+            {
+                gameboard[i][j] = ' ';
+            }
+            MacUILib_printf("%c", gameboard[i][j]);
+            
+            
+        }
+        MacUILib_printf("\n");
+
+    }
+}
 void objPos::setObjPos(objPos o)
 {
     pos->x = o.pos->x;
