@@ -23,6 +23,11 @@ class objPos
         void setObjPos(objPos o);        
         void setObjPos(int xPos, int yPos, char sym);  
 
+        //copy constructor and assingmemnt operator
+        objPos(const objPos& other);            
+        objPos& operator=(const objPos& other); 
+        ~objPos(); 
+
         objPos getObjPos() const;
         char getSymbol() const;
         char getSymbolIfPosEqual(const objPos* refPos) const;
