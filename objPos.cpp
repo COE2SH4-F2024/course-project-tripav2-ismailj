@@ -1,13 +1,7 @@
 #include "objPos.h"
-#include "MacUILib.h" //i added that
+#include "MacUILib.h" //added
+#include <iostream> //added
 
-objPos::objPos()
-{
-    pos = new Pos;
-    pos->x = 0;
-    pos->y = 0;
-    symbol = 0; //NULL
-}
 
 objPos::objPos(int xPos, int yPos, char sym)
 {
@@ -20,85 +14,116 @@ objPos::objPos(int xPos, int yPos, char sym)
 // Respect the rule of six / minimum four
 // [TODO] Implement the missing special member functions to meet the minimum four rule
 
-//destructing the constructor
+
+//default contructor (already here)
+objPos::objPos()
+{
+    pos = new Pos;
+    pos->x = 0;
+    pos->y = 0;
+    symbol = 0; //NULL
+}
+
+objPos::objPos(const objPos& other)
+{
+    std::cout << "Copy constructor called\n";
+    pos = new Pos;              // Allocate memory for a new Pos (free this*)
+    pos->x = other.pos->x;      // Copy x-coordinate
+    pos->y = other.pos->y;      // Copy y-coordinate
+    symbol = other.symbol;      // Copy the symbol
+}
+
+//ADDING ASSINGMENT OPERATOR
+ 
+objPos& objPos::operator=(const objPos& other)
+{
+    std::cout << "Copy assignment operator called\n";
+    if (this != &other) {       // Checkign for self-assignment
+        delete pos;             // Freeing**
+        pos = new Pos;          // Allocate memory for new Pos (free this*)
+        pos->x = other.pos->x;  // Copy x-coord
+        pos->y = other.pos->y;  // Copy y-coord
+        symbol = other.symbol;  // Copy symbol
+    }
+    return *this;               // Return *this for assignment chaining
+}
+
+//DESTRUCTOR
 objPos::~objPos()
 {
-    // cout <<"Destructor Called\n";
-    delete pos;
+    std::cout << "Destructor called\n";
+    delete pos;                         // freeing*
 }
-
-//copy constructor
-objPos::objPos(const objPos &a)
+ 
+ 
+void DrawScreen(void)
 {
-    // cout<<"Cpy constructor called\n";
-    //deep copy
-
-        // Pos* pos;        
-        // char symbol;
-
-    symbol = a.symbol; //deep copy
-    pos = new Pos;
-
-    for(int i = 0; i < symbol; i++)
+    // dimensions
+    const int HEIGHT = 10;
+    const int WIDTH = 20;
+ 
+    // Defining the player object and game objects
+    objPos player(5, 5, '#'); // Player starts at (5, 5) with symbol '#'
+    objPos items[] = {
+        objPos(2, 6, 'W'),
+        objPos(4, 8, 'X'),
+        objPos(7, 3, 'Y'),
+        objPos(6, 10, 'Z')
+    };
+ 
+    const int NUM_ITEMS = sizeof(items) / sizeof(items[0]); // Number of items
+ 
+    // 1. Clear the current screen contents
+    MacUILib_clearScreen();
+ 
+    // 2. Iterate through each character location on the game board
+    for (int y = 0; y < HEIGHT; y++)
     {
-        pos[i] = a.pos[i];
-    }
-}
-
-objPos& objPos::operator=(const objPos &a)
-{
-    //cout<<"Copy assignment operator called\n";
-    if(this != &a)
-    {
-        this->symbol = a.symbol;
-        for(int i = 0; i < this->symbol; i++)
+        for (int x = 0; x < WIDTH; x++)
         {
-        this->pos[i] = a.pos[i];
-        }
-        return *this;
-    }
-}
-
-
-
-
-void gameboard()
-{
-    const int rows = 10;
-    const int columns = 20;
-    char gameboard[rows][columns];
-
-    for(int i = 0; i < rows; i++){
-        //inner loop for width
-        for(int j = 0; j < columns; j++){
-            // if(int i == objpost1.x && j == objpost1.y)
-            // {
-            //     gameboard[i][j] = objpost1.symbol;
-            // }
-            if (i == 0 || i == rows-1 || j == 0 || j == columns-1)
+            // 3. Drawing gameboard border using `#`
+            if (y == 0 || y == HEIGHT - 1 || x == 0 || x == WIDTH - 1)
             {
-                gameboard[i][j] = '#';
+                MacUILib_printf("#"); // Border symbol
             }
-            else if( i == 2 && j ==6) //aribtary coordinate
+            // Check for the player object position
+            else if (x == player.pos->x && y == player.pos->y)
             {
-                gameboard[i][j] = 'W';
-            }
-            else if(i == 10 && j == 13)
-            {
-                gameboard[i][j] = 'Z'; //aribtary coordinate
+                MacUILib_printf("%c", player.symbol); // Player symbol
             }
             else
             {
-                gameboard[i][j] = ' ';
+                int itemFound = 0;
+ 
+                // Check for items in the gameboard
+                for (int i = 0; i < NUM_ITEMS; i++)
+                {
+                    if (x == items[i].pos->x && y == items[i].pos->y)
+                    {
+                        // Draw the item's symbol
+                        MacUILib_printf("%c", items[i].symbol);
+                        itemFound = 1;
+                        break;
+                    }
+                }
+ 
+                // Print a space if no item is found
+                if (!itemFound)
+                {
+                    MacUILib_printf(" ");
+                }
             }
-            MacUILib_printf("%c", gameboard[i][j]);
-            
-            
         }
-        MacUILib_printf("\n");
-
+        MacUILib_printf("\n"); // Move to  next row
     }
+ 
+    // 4. Debug info.
+    MacUILib_printf("\n[DEBUG] Player position: (%d, %d)\n", player.pos->x, player.pos->y);
+    MacUILib_printf("[DEBUG] Number of items on board: %d\n", NUM_ITEMS);
+    MacUILib_printf("[DEBUG] Gameboard dimensions: %dx%d\n", WIDTH, HEIGHT);
 }
+
+
 void objPos::setObjPos(objPos o)
 {
     pos->x = o.pos->x;
