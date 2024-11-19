@@ -60,7 +60,7 @@ objPos::~objPos()
     delete pos;                         // freeing*
 }
 
-
+/*
 void DrawScreen(void)
 {
     // dimensions
@@ -127,7 +127,7 @@ void DrawScreen(void)
     MacUILib_printf("[DEBUG] Number of items on board: %d\n", NUM_ITEMS);
     MacUILib_printf("[DEBUG] Gameboard dimensions: %dx%d\n", WIDTH, HEIGHT);
 }
-
+*/
 
 void objPos::setObjPos(objPos o)
 {
