@@ -53,22 +53,53 @@ void Initialize(void)
 
 void GetInput(void)
 {
-   
+   myPlayer->updatePlayerDir(); //iteration 1a
 }
 
 void RunLogic(void)
 {
-    
+    myPlayer->movePlayer(); //iteration 1a
 }
 
 void DrawScreen(void)
 {
-    MacUILib_clearScreen();   
+    const int rows = 10;    // Gameboard height
+    const int columns = 20; // Gameboard width
 
-    objPos playerPos = myPlayer -> getPlayerPos();
+    MacUILib_clearScreen(); // Clear the screen
 
-    MacUILib_printf("Player [x,y, sym] = [%d, %d, %c]\n", playerPos.pos->x, playerPos.pos->y, playerPos.symbol);
+    // Retrieve the player position without copying
+    const objPos& playerPos = myPlayer->getPlayerPos();
+
+    // Render the gameboard
+    for (int i = 0; i < rows; i++)
+    {
+        for (int j = 0; j < columns; j++)
+        {
+            // Draw the gameboard border
+            if (i == 0 || i == rows - 1 || j == 0 || j == columns - 1)
+            {
+                MacUILib_printf("#"); // Border symbol
+            }
+            // Draw the player at their position
+            else if (i == playerPos.pos->y && j == playerPos.pos->x)
+            {
+                MacUILib_printf("%c", playerPos.symbol); // Use the player's symbol
+            }
+            // Draw empty space
+            else
+            {
+                MacUILib_printf(" ");
+            }
+        }
+        MacUILib_printf("\n"); // Move to the next row
+    }
+
+    // Debugging information (optional)
+    MacUILib_printf("\n[DEBUG] Player position: (%d, %d, %c)\n", playerPos.pos->x, playerPos.pos->y, playerPos.symbol);
 }
+
+
 
 void LoopDelay(void)
 {
