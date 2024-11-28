@@ -44,6 +44,28 @@ class GameMechs
         void incrementScore();
        
         // More methods should be added here
+        // void collectAsyncInput();
+
+        // void generateFood(objPos blockOff);
+        // objPos getFoodPos() const;
+
+        // GameMechs::GameMechs(int boardX, int boardY) : boardSizeX(boardX), boardSizeY(boardY), score(0), exitFlag(false), loseFlag(false) 
+        // {
+        // food.setObjPos(boardSizeX / 2, boardSizeY / 2, '*');
+        // // generateFood(objPos(boardSizeX / 2, boardSizeY / 2, '*')); // Ensure food doesn't overlap initial position
+        // }
+
+        void collectAsyncInput();
+
+        // void generateFood(objPos blockOff);
+        // objPos getFoodPos() const;
+
+        // GameMechs::GameMechs(int boardX, int boardY) : boardSizeX(boardX), boardSizeY(boardY), score(0), exitFlag(false), loseFlag(false) 
+        // {
+        // food.setObjPos(boardSizeX / 2, boardSizeY / 2, '*');
+        // generateFood(objPos(boardSizeX / 2, boardSizeY / 2, '*')); // Ensure food doesn't overlap initial position
+        // }
 };
  
 #endif
+

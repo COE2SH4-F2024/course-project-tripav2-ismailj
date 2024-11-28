@@ -4,12 +4,15 @@
 
 #include "Player.h"
 
+#include "Food.h"
+
 using namespace std;
 
 #define DELAY_CONST 100000
 
 Player *myPlayer; // its a global var meant to intantiate a player object
 GameMechs *myGM;
+Food *myFood; //iteration 2b
 
 bool exitFlag;
 
@@ -49,11 +52,17 @@ void Initialize(void)
     myPlayer = new Player(myGM);  
 
     exitFlag = false;
+    
+    myFood = new Food(); //iteration 2b
+    
+    myFood->generateRandomPosition(myPlayer->getPlayerPos()); //iteration 2b
+
 }
 
 void GetInput(void)
 {
    myPlayer->updatePlayerDir(); //iteration 1a
+   myGM -> collectAsyncInput();
 }
 
 void RunLogic(void)
@@ -63,13 +72,16 @@ void RunLogic(void)
 
 void DrawScreen(void)
 {
+    objPos playerPos = myPlayer -> getPlayerPos();
+
     const int rows = 10;    // Gameboard height
     const int columns = 20; // Gameboard width
+   // objPos foodPos = myGM ->getFoodPos(); //iteration 2b
 
     MacUILib_clearScreen(); // Clear the screen
 
     // Retrieve the player position without copying
-    const objPos& playerPos = myPlayer->getPlayerPos();
+    //const objPos playerPos = myPlayer->getPlayerPos();
 
     // Render the gameboard
     for (int i = 0; i < rows; i++)
@@ -87,9 +99,17 @@ void DrawScreen(void)
                 MacUILib_printf("%c", playerPos.symbol); // Use the player's symbol
             }
             // Draw empty space
+            else if(j == playerPos.pos->x && i == playerPos.pos->y)
+            {
+                MacUILib_printf("%c", playerPos.symbol);
+            }
+            else if(j == myFood->getFoodPos().pos->x && i == myFood->getFoodPos().pos->y)  //iteration 2b
+            {
+                MacUILib_printf("%c", myFood->getFoodPos().symbol);
+            }
             else
             {
-                MacUILib_printf(" ");
+                MacUILib_printf("%c", ' ');
             }
         }
         MacUILib_printf("\n"); // Move to the next row
@@ -97,7 +117,10 @@ void DrawScreen(void)
 
     // Debugging information (optional)
     MacUILib_printf("\n[DEBUG] Player position: (%d, %d, %c)\n", playerPos.pos->x, playerPos.pos->y, playerPos.symbol);
+    MacUILib_printf("\n[DEBUG] Food position: (%d, %d, %c)\n", myFood->getFoodPos().pos->x, myFood->getFoodPos().pos->y, myFood->getFoodPos().symbol);
+
 }
+
 
 
 

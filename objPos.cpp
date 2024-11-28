@@ -27,7 +27,7 @@ objPos::objPos()
 
 objPos::objPos(const objPos& other)
 {
-    std::cout << "Copy constructor called\n";
+    // std::cout << "Copy constructor called\n";
     pos = new Pos;              // Allocate memory for a new Pos (free this*)
     pos->x = other.pos->x;      // Copy x-coordinate
     pos->y = other.pos->y;      // Copy y-coordinate
@@ -38,7 +38,7 @@ objPos::objPos(const objPos& other)
  
 objPos& objPos::operator=(const objPos& other)
 {
-    std::cout << "Copy assignment operator called\n";
+    // std::cout << "Copy assignment operator called\n";
     if (this != &other) {       // Checkign for self-assignment
         delete pos;             // Freeing**
         pos = new Pos;          // Allocate memory for new Pos (free this*)
@@ -52,7 +52,7 @@ objPos& objPos::operator=(const objPos& other)
 //DESTRUCTOR
 objPos::~objPos()
 {
-    std::cout << "Destructor called\n";
+    //std::cout << "Destructor called\n";
     delete pos;                         // freeing*
 }
 
