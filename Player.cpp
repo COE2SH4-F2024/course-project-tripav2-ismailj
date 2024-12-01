@@ -1,7 +1,4 @@
 #include "Player.h"
-#include "GameMechs.h" //added
-#include "MacUILib.h"
-Player* player = nullptr; // Global pointer to the Player object
 
 
 Player::Player(GameMechs* thisGMRef)
@@ -9,103 +6,106 @@ Player::Player(GameMechs* thisGMRef)
     mainGameMechsRef = thisGMRef;
     playerdirection = STOP;
 
+    playerPosList = new objPosArrayList(); // Allocate the array list
+    objPos headPos(mainGameMechsRef->getBoardSizeX() / 2, mainGameMechsRef->getBoardSizeY() / 2, '*');
+    playerPosList->insertHead(headPos);
     // Initialize player's position and symbol
-    playerPos.pos->x = mainGameMechsRef->getBoardSizeX() / 2; // Center on the board
-    playerPos.pos->y = mainGameMechsRef->getBoardSizeY() / 2;
-    playerPos.symbol = '*'; // ASCII character for the player
+    // playerPos.pos->x = mainGameMechsRef->getBoardSizeX() / 2; 
+    // playerPos.pos->y = mainGameMechsRef->getBoardSizeY() / 2;
+    // playerPos.symbol = '*'; // ASCII character for the player
+    
 }
 
 
 Player::~Player()
 {
-    // delete any heap members here
-    //no keyword "new" in the constructor
-    //leave the constructor empty FOR NOW
-    
+    delete playerPosList;
 }
 
-objPos Player::getPlayerPos() const
+objPosArrayList* Player::getPlayerPosList() const //objPos &returnPos, og void
 {
     // return the reference to the playerPos arrray list
     
-    return playerPos;
+    //return the reference to the player objPos array list
+    return playerPosList; 
 }
 
 void Player::updatePlayerDir()
 {
-        char input = mainGameMechsRef->getInput();
-    MacUILib_printf("[DEBUG] Input received: %c\n", input); // Debug input
+    char input = mainGameMechsRef -> getInput();
 
-        switch(input)
-            {
-      
-            case 'W':
-            case 'w':
-                if(playerdirection == RIGHT || playerdirection == LEFT || playerdirection == STOP){
-                    playerdirection = UP;
-                    }
-                    break;
-            case 'S':
-            case 's':
-                if(playerdirection == RIGHT || playerdirection == LEFT || playerdirection == STOP){
-                    playerdirection = DOWN;
-                }
-                    break;
-            case 'D':
-            case 'd':
-                if(playerdirection == DOWN || playerdirection == UP || playerdirection == STOP){
-                    playerdirection = RIGHT;
-                }
-                    break;
-            case 'A':
-            case 'a':
-                if(playerdirection == UP || playerdirection == DOWN || playerdirection == STOP ){
-                    playerdirection = LEFT;
-                }
-                    break;
-
-
-            
-            // Add more key processing here
-            // Add more key processing here    
-            default:
-                break;
-        }
-        input = 0;
-        MacUILib_printf("[DEBUG] Player direction updated: %d\n", playerdirection);
-}
-
-void Player::movePlayer()
-{
-    
-    // PPA3 Finite State Machine logic (iteration 1A)
-    switch (playerdirection)
-    {
-        case UP:
-            playerPos.pos->y -= 1;
+    switch(input) 
+    {                      
+        case 'W':
+        case 'w':
+            if ((playerdirection == LEFT || playerdirection == RIGHT || playerdirection == STOP)){
+                playerdirection = UP;
+            }
             break;
-        case DOWN:
-            playerPos.pos->y += 1;
+        case 'S':
+        case 's':
+            if ((playerdirection == LEFT || playerdirection == RIGHT || playerdirection == STOP)){
+                playerdirection = DOWN;
+            }
             break;
-        case RIGHT:
-            playerPos.pos->x += 1;
+        case 'D':
+        case 'd':
+            if ((playerdirection == UP || playerdirection == DOWN || playerdirection == STOP)){
+                playerdirection = RIGHT;
+            }
             break;
-        case LEFT:
-            playerPos.pos->x -= 1;
+        case 'A':
+        case 'a':
+            if ((playerdirection == UP || playerdirection == DOWN || playerdirection == STOP)){
+                playerdirection = LEFT;
+            }
             break;
         default:
-            break; 
+            break;
     }
 
-    //implementing the gameboard wrap around logic (iteration 1A)
-    int boardWidth = mainGameMechsRef->getBoardSizeX();
-    int boardHeight = mainGameMechsRef->getBoardSizeY();
+       
+}
 
-    if (playerPos.pos->x < 0) playerPos.pos->x = boardWidth - 1;
-    else if (playerPos.pos->x >= boardWidth) playerPos.pos->x = 0;
+void Player::movePlayer() {
+    objPos currentHead = playerPosList->getHeadElement();
+    objPos newHead = currentHead; 
 
-    if (playerPos.pos->y < 0) playerPos.pos->y = boardHeight - 1;
-    else if (playerPos.pos->y >= boardHeight) playerPos.pos->y = 0;
+        // PPA3 Finite State Machine logic (iteration 1A)
+    switch (playerdirection) {
+        case UP:
+            newHead.pos->x -= 1;
+            if (newHead.pos->x < 1) {
+                newHead.pos->x = mainGameMechsRef->getBoardSizeX() - 2; 
+            }
+            break;
+        case DOWN:
+            newHead.pos->x += 1;
+            if (newHead.pos->x > mainGameMechsRef->getBoardSizeX() - 2) {
+                newHead.pos->x = 1; 
+            }
+            break;
+        case LEFT:
+            newHead.pos->y -= 1;
+            if (newHead.pos->y < 1) {
+                newHead.pos->y = mainGameMechsRef->getBoardSizeY() - 2; 
+            }
+            break;
+        case RIGHT:
+            newHead.pos->y += 1;
+            if (newHead.pos->y > mainGameMechsRef->getBoardSizeY() - 2) {
+                newHead.pos->y = 1; 
+            }
+            break;
+        default:
+            return; 
     }
 
-// More methods to be added
+
+
+    // More methods to be added
+
+
+    playerPosList->insertHead(newHead);
+    playerPosList->removeTail(); //remove the last piece(tail)
+}

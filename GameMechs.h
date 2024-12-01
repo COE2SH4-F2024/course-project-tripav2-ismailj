@@ -65,7 +65,12 @@ class GameMechs
         // food.setObjPos(boardSizeX / 2, boardSizeY / 2, '*');
         // generateFood(objPos(boardSizeX / 2, boardSizeY / 2, '*')); // Ensure food doesn't overlap initial position
         // }
+      void generateFood(objPos blockoff);
+      objPos getFoodPos() const;
+
 };
  
 #endif
+
+
 
