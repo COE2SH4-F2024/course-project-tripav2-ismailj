@@ -128,6 +128,11 @@ void CleanUp(void)
 {
     MacUILib_clearScreen();  
 
+    if (myGM->getLoseFlagStatus()) 
+    {
+        std::cout << "Game Over! You collided with yourself. Better luck next time!\n";
+    }
+    
     delete myPlayer;  
     delete myGM;
 

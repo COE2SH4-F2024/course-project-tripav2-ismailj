@@ -1,5 +1,5 @@
 #include "Player.h"
-
+#include <iostream> // for printing lose message
 
 Player::Player(GameMechs* thisGMRef)
 {
@@ -108,4 +108,26 @@ void Player::movePlayer() {
 
     playerPosList->insertHead(newHead);
     playerPosList->removeTail(); //remove the last piece(tail)
+
+//checking for collision with self
+    if (checkSelfCollision()) {
+        mainGameMechsRef->setLoseFlag();
+        mainGameMechsRef->setExitTrue();
+    }
+    
+}
+
+// Check for collision with self
+bool Player::checkSelfCollision()
+{
+    objPos head = playerPosList->getHeadElement(); // Get the head element
+    for (int i = 1; i < playerPosList->getSize(); i++) // Start from index 1 to check for collision
+    {
+        objPos currentElement = playerPosList->getElement(i); // Store the element in a variable
+        if (head.isPosEqual(&currentElement)) // Use the address of the variable
+        {
+            return true; // Collision detected
+        }
+    }
+    return false; // No collision
 }
