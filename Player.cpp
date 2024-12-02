@@ -120,11 +120,11 @@ void Player::movePlayer() {
 // Check for collision with self
 bool Player::checkSelfCollision()
 {
-    objPos head = playerPosList->getHeadElement(); // Get the head element
-    for (int i = 1; i < playerPosList->getSize(); i++) // Start from index 1 to check for collision
+    objPos head = playerPosList->getHeadElement(); // Getting the head element
+    for (int i = 1; i < playerPosList->getSize(); i++) // Starting from index1 to check for collision
     {
-        objPos currentElement = playerPosList->getElement(i); // Store the element in a variable
-        if (head.isPosEqual(&currentElement)) // Use the address of the variable
+        objPos currentElement = playerPosList->getElement(i); // Storing element in a variable
+        if (head.isPosEqual(&currentElement)) // Use the address of variable
         {
             return true; // Collision detected
         }
