@@ -5,7 +5,7 @@ Course Project
 You must watch the briefing video and read through the manual to engage in the development activities.
 
 
-Section: L01
+Section: C01
 
 Team Information
 Member 1 MacID: [tripav2]
